@@ -18,7 +18,7 @@ public class User {
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private Long UserId;
+	private Long userId;
 	
 	
 	@Column(nullable=false)
@@ -27,7 +27,7 @@ public class User {
 	@Column(nullable=false)
 	private String lastName;
 	
-	@Column(nullable=false,unique=true)
+	@Column(nullable=false)
 	private String password;
 	
 	@Column(nullable=false,unique=true)
@@ -50,7 +50,7 @@ public class User {
 	public User(Long userId, String firstName, String lastName, String password, String mailId, String mobileNumber,
 			String userRole, LocalDateTime createdOn, LocalDateTime updatedOn) {
 		super();
-		UserId = userId;
+		this.userId = userId;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.password = password;
@@ -63,11 +63,11 @@ public class User {
 	}
 
 	public Long getUserId() {
-		return UserId;
+		return userId;
 	}
 
 	public void setUserId(Long userId) {
-		UserId = userId;
+		this.userId = userId;
 	}
 
 	public String getFirstName() {
@@ -138,7 +138,7 @@ public class User {
 
 	@Override
 	public String toString() {
-		return "User [UserId=" + UserId + ", firstName=" + firstName + ", lastName=" + lastName + ", password="
+		return "User [userId=" + userId + ", firstName=" + firstName + ", lastName=" + lastName + ", password="
 				+ password + ", mailId=" + mailId + ", mobileNumber=" + mobileNumber + ", userRole=" + userRole
 				+ ", createdOn=" + createdOn + ", updatedOn=" + updatedOn + "]";
 	}
