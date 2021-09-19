@@ -94,6 +94,7 @@ public class BookController {
 		return new ResponseEntity<>(bookService.getBookByGenre(genre), HttpStatus.OK);
 	}
 
+	//get book by isbn
 	@GetMapping("/isbn/{isbn}")
 	public ResponseEntity<List<Book>> getBookByISBN(@PathVariable Long isbn) {
 
