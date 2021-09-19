@@ -1,54 +1,65 @@
 package com.revature.model;
 
-import java.time.LocalDateTime;
+import java.io.Serializable;
+
+import java.util.Date;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
-@Table(name="users_rev")
+@Table(name = "users_table")
 
-public class User {
-	
+public class User implements Serializable {
+
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long userId;
-	
-	
-	@Column(nullable=false)
+
+	@Column(nullable = false)
 	private String firstName;
-	
-	@Column(nullable=false)
+
+	@Column(nullable = false)
 	private String lastName;
-	
-	@Column(nullable=false)
+
+	@Column(nullable = false)
 	private String password;
-	
-	@Column(nullable=false,unique=true)
+
+	@Column(nullable = false, unique = true)
 	private String mailId;
-	
-	@Column(nullable=false,unique=true)
+
+	@Column(nullable = false, unique = true)
 	private String mobileNumber;
-	
-	@Column(nullable=false)
+
+	@Column(nullable = false)
 	private String userRole;
-	
-	
-	private LocalDateTime createdOn;
-	private LocalDateTime updatedOn;
-	
+
+	@Temporal(TemporalType.DATE)
+	private Date createdOn;
+	@Temporal(TemporalType.DATE)
+	private Date updatedOn;
+
+	@OneToMany(mappedBy = "user",fetch=FetchType.LAZY)
+	@JsonIgnore
+	private Set<IssueBook> issueBook;
+
 	public User() {
-		
+
 	}
 
 	public User(Long userId, String firstName, String lastName, String password, String mailId, String mobileNumber,
-			String userRole, LocalDateTime createdOn, LocalDateTime updatedOn) {
+			String userRole, Date createdOn, Date updatedOn, Set<IssueBook> issueBook) {
 		super();
 		this.userId = userId;
 		this.firstName = firstName;
@@ -57,9 +68,9 @@ public class User {
 		this.mailId = mailId;
 		this.mobileNumber = mobileNumber;
 		this.userRole = userRole;
-		
 		this.createdOn = createdOn;
 		this.updatedOn = updatedOn;
+		this.issueBook = issueBook;
 	}
 
 	public Long getUserId() {
@@ -118,32 +129,35 @@ public class User {
 		this.userRole = userRole;
 	}
 
-
-
-	public LocalDateTime getCreatedOn() {
+	public Date getCreatedOn() {
 		return createdOn;
 	}
 
-	public void setCreatedOn(LocalDateTime createdOn) {
+	public void setCreatedOn(Date createdOn) {
 		this.createdOn = createdOn;
 	}
 
-	public LocalDateTime getUpdatedOn() {
+	public Date getUpdatedOn() {
 		return updatedOn;
 	}
 
-	public void setUpdatedOn(LocalDateTime updatedOn) {
+	public void setUpdatedOn(Date updatedOn) {
 		this.updatedOn = updatedOn;
+	}
+
+	public Set<IssueBook> getIssueBook() {
+		return issueBook;
+	}
+
+	public void setIssueBook(Set<IssueBook> issueBook) {
+		this.issueBook = issueBook;
 	}
 
 	@Override
 	public String toString() {
 		return "User [userId=" + userId + ", firstName=" + firstName + ", lastName=" + lastName + ", password="
 				+ password + ", mailId=" + mailId + ", mobileNumber=" + mobileNumber + ", userRole=" + userRole
-				+ ", createdOn=" + createdOn + ", updatedOn=" + updatedOn + "]";
+				+ ", createdOn=" + createdOn + ", updatedOn=" + updatedOn + ", issueBook=" + issueBook + "]";
 	}
-
-	
-	
 
 }

@@ -1,53 +1,68 @@
 package com.revature.model;
 
-import java.time.LocalDateTime;
+import java.io.Serializable;
 
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
-@Table(name="books_table")
+@Table(name = "books_table")
 
-
-public class Book {
-	
+public class Book implements Serializable {
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long bookId;
-	
-	@Column(nullable=false)
+
+	@Column(nullable = false)
+	private Long isbn;
+
+	@Column(nullable = false)
 	private String bookName;
-	
-	@Column(nullable=false)
+
+	@Column(nullable = false)
 	private String authorName;
-	
-	@Column(nullable=false)
+
+	@Column(nullable = false)
 	private String genre;
-	
-	@Column(nullable=false)
+
+	@Column(nullable = false)
 	private int volume;
-	
-	@Column(nullable=false)
+
+	@Column(nullable = false)
 	private int edition;
-	
-	private LocalDateTime createdOn;
-	private LocalDateTime updatedOn;
-	
+
+	@Temporal(TemporalType.DATE)
+	private Date createdOn;
+	@Temporal(TemporalType.DATE)
+	private Date updatedOn;
+
+	@OneToOne(mappedBy = "book",fetch=FetchType.LAZY)
+	@JsonIgnore
+	private IssueBook issueBook;
+
 	public Book() {
-		
+
 	}
 
-	public Book(Long bookId, String bookName, String authorName, String genre, int volume, int edition,
-			LocalDateTime createdOn, LocalDateTime updatedOn) {
+	
+	public Book(Long bookId, Long isbn, String bookName, String authorName, String genre, int volume, int edition,
+			Date createdOn, Date updatedOn, IssueBook issueBook) {
 		super();
 		this.bookId = bookId;
+		this.isbn = isbn;
 		this.bookName = bookName;
 		this.authorName = authorName;
 		this.genre = genre;
@@ -55,6 +70,26 @@ public class Book {
 		this.edition = edition;
 		this.createdOn = createdOn;
 		this.updatedOn = updatedOn;
+		this.issueBook = issueBook;
+	}
+
+
+	public IssueBook getIssueBook() {
+		return issueBook;
+	}
+
+
+	public void setIssueBook(IssueBook issueBook) {
+		this.issueBook = issueBook;
+	}
+
+
+	public Long getIsbn() {
+		return isbn;
+	}
+
+	public void setIsbn(Long isbn) {
+		this.isbn = isbn;
 	}
 
 	public Long getBookId() {
@@ -105,27 +140,61 @@ public class Book {
 		this.edition = edition;
 	}
 
-	public LocalDateTime getCreatedOn() {
+	public Date getCreatedOn() {
 		return createdOn;
 	}
 
-	public void setCreatedOn(LocalDateTime createdOn) {
+	public void setCreatedOn(Date createdOn) {
 		this.createdOn = createdOn;
 	}
 
-	public LocalDateTime getUpdatedOn() {
+	public Date getUpdatedOn() {
 		return updatedOn;
 	}
 
-	public void setUpdatedOn(LocalDateTime updatedOn) {
+	public void setUpdatedOn(Date updatedOn) {
 		this.updatedOn = updatedOn;
 	}
 
 	@Override
 	public String toString() {
-		return "Book [bookId=" + bookId + ", bookName=" + bookName + ", authorName=" + authorName + ", genre=" + genre
-				+ ", volume=" + volume + ", edition=" + edition + ", createdOn=" + createdOn + ", updatedOn="
-				+ updatedOn + "]";
+		return "Book [bookId=" + bookId + ", isbn=" + isbn + ", bookName=" + bookName + ", authorName=" + authorName
+				+ ", genre=" + genre + ", volume=" + volume + ", edition=" + edition + ", createdOn=" + createdOn
+				+ ", updatedOn=" + updatedOn + ", issueBook=" + issueBook + "]";
 	}
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

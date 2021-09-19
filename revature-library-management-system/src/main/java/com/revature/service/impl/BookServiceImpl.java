@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.revature.dao.BookDAO;
+import com.revature.exception.DuplicateIdException;
+import com.revature.exception.IdNotFoundException;
 import com.revature.model.Book;
 import com.revature.service.BookService;
 
@@ -26,7 +28,8 @@ public class BookServiceImpl implements BookService {
 
 	@Override
 	public String updateBook(Book book) {
-		return bookDAO.updateBook(book);
+	
+			return bookDAO.updateBook(book);
 	}
 
 	@Override
@@ -68,5 +71,10 @@ public class BookServiceImpl implements BookService {
 	public List<Book> getAllBooks() {
 		return bookDAO.getAllBooks();
 
+	}
+
+	@Override
+	public List<Book> getBookByISBN(Long isbn) {
+		return bookDAO.getBookByISBN(isbn);
 	}
 }

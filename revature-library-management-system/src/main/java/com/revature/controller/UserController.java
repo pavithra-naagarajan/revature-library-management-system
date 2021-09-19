@@ -3,7 +3,6 @@ package com.revature.controller;
 
 import java.util.List;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +29,16 @@ public class UserController {
 	@Autowired
 	UserService userService;
 
-	
+	// user login
+	@GetMapping("login/{mailId}/{password}")
+	public ResponseEntity<User> userLogin(@PathVariable("mailId") String mailId,
+
+			@PathVariable("password") String password) {
+
+		return new ResponseEntity<>(userService.userLogin(mailId, password), HttpStatus.OK);
+
+	}
+
 	// get user by id
 
 	@GetMapping("{userId}")
@@ -41,9 +49,8 @@ public class UserController {
 			user = userService.getUserById(userId);
 			return new ResponseEntity<>(user, HttpStatus.OK);
 		} else
-			return new ResponseEntity<>(user, HttpStatus.NO_CONTENT);
 
-		
+			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 
 	}
 
@@ -58,13 +65,10 @@ public class UserController {
 
 			return new ResponseEntity<>(HttpStatus.CONFLICT);
 
-		else {
-			userService.addUser(user);
+		else
 
-			return new ResponseEntity<>(HttpStatus.OK);
-		}
+			return new ResponseEntity<>(userService.addUser(user), HttpStatus.OK);
 
-		
 	}
 
 	// update a user
@@ -74,42 +78,42 @@ public class UserController {
 
 		long userId = user.getUserId();
 
-		if (userService.isUserExists(userId)) {
-			userService.updateUser(user);
+		if (userService.isUserExists(userId))
 
-			return  new ResponseEntity<>(HttpStatus.OK);
-		} else
-			return  new ResponseEntity<>(HttpStatus.NO_CONTENT);
+			return new ResponseEntity<>(userService.updateUser(user), HttpStatus.OK);
+		else
+			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 
-		
 	}
 
 	// delete a user
 
 	@DeleteMapping("/{userId}")
-	public ResponseEntity<String> deletePatient(@PathVariable("userId") Long userId) {
+	public ResponseEntity<String> deleteUser(@PathVariable("userId") Long userId) {
 
-		if (userService.isUserExists(userId)) {
-			userService.deleteUserById(userId);
+		if (userService.isUserExists(userId))
 
-			return new ResponseEntity<>(HttpStatus.OK);
-		} else
-			return  new ResponseEntity<>(HttpStatus.NO_CONTENT);
+			return new ResponseEntity<>(userService.deleteUserById(userId), HttpStatus.OK);
+		else
+			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 
-		
 	}
 
+	// get user by first and last name
 	@GetMapping("/firstNameAndLastName/{firstName}/{lastName}")
 	public ResponseEntity<User> getUserByFirstName(@PathVariable String firstName, @PathVariable String lastName) {
 
 		return new ResponseEntity<>(userService.getUserByFirstAndLastName(firstName, lastName), HttpStatus.OK);
 	}
 
+	// get user by role
 	@GetMapping("/role/{userRole}")
 	public ResponseEntity<List<User>> getUserByRole(@PathVariable String userRole) {
 
 		return new ResponseEntity<>(userService.getUserByRole(userRole), HttpStatus.OK);
 	}
+
+	// get user by mobilenumber
 
 	@GetMapping("/mobile/{mobileNumber}")
 	public ResponseEntity<User> getUserByMobileNumber(@PathVariable String mobileNumber) {
@@ -117,11 +121,14 @@ public class UserController {
 		return new ResponseEntity<>(userService.getUserByMobileNumber(mobileNumber), HttpStatus.OK);
 	}
 
+	// get user by mailid
 	@GetMapping("/mail/{mailId}")
 	public ResponseEntity<User> getUserByMailId(@PathVariable String mailId) {
 
 		return new ResponseEntity<>(userService.getUserByMailId(mailId), HttpStatus.OK);
 	}
+
+	// get all users
 
 	@GetMapping
 	public ResponseEntity<List<User>> getAllUsers() {

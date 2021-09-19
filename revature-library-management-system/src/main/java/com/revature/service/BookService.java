@@ -20,5 +20,6 @@ public interface BookService {
 	public List<Book> getBookByAuthor(String authorName); 
 	public List<Book>getBookByGenre(String genre); 
 	public List<Book> getAllBooks();
+	public List<Book> getBookByISBN(Long isbn); 
 	
 }

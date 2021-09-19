@@ -2,6 +2,7 @@ package com.revature.model;
 
 import javax.persistence.Column;
 
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -25,7 +26,7 @@ public class Admin {
 	@Column(nullable=false)
 	private String adminRole;
 	
-	@Column(nullable=false,unique=true)
+	@Column(nullable=false)
 	private String adminPassword;
 	
 	public Admin() {

@@ -4,10 +4,13 @@ package com.revature.service.impl;
 import java.util.List;
 
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.revature.dao.UserDAO;
+import com.revature.exception.DuplicateIdException;
+import com.revature.exception.IdNotFoundException;
 import com.revature.model.User;
 import com.revature.service.UserService;
 
@@ -19,13 +22,15 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public String addUser(User user) {
-		return userDAO.addUser(user);
+		
+			return userDAO.addUser(user);
 
 	}
 
 	@Override
 	public String updateUser(User user) {
-		return userDAO.updateUser(user);
+		
+			return userDAO.updateUser(user);
 	}
 
 	@Override
@@ -36,7 +41,10 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public User getUserById(Long userId) {
-		return userDAO.getUserById(userId);
+	
+		
+			return userDAO.getUserById(userId);
+	
 
 	}
 
@@ -71,6 +79,11 @@ public class UserServiceImpl implements UserService {
 	public List<User> getAllUsers() {
 		return userDAO.getAllUsers();
 
+	}
+
+	@Override
+	public User userLogin(String mailId, String password) {
+		return userDAO.userLogin(mailId,password);
 	}
 
 }
