@@ -1,0 +1,73 @@
+-------------------------------------------------IssueBook
+ {
+        "issueId": 1,
+        "issueDate": "2021-08-07",
+        "dueDate": "2021-08-17",
+        "user": {
+            "userId": 2,
+            "firstName": "sree",
+            "lastName": "kumar",
+            "password": "sree123",
+            "mailId": "sree@gmail.com",
+            "mobileNumber": "7897869059",
+            "userRole": "student",
+            "createdOn": "2021-09-08",
+            "updatedOn": "2021-09-03"
+        },
+"book": {
+            "bookId": 3,
+            "isbn": 9876,
+            "bookName": "I too had a Love Story",
+            "authorName": "Ravinder Singh",
+            "genre": "Love",
+            "volume": 2,
+            "edition": 3,
+            "createdOn": "2021-06-07",
+            "updatedOn": "2021-09-08"
+        }
+    }
+
+
+
+
+-----------------------------User
+
+{
+        "userId": 1,
+        "firstName": "pavithra",
+        "lastName": "Nagarajan",
+        "password": "pavi123",
+        "mailId": "pavi@gmail.com",
+        "mobileNumber": "7897867659",
+        "userRole": "student",
+        "createdOn": "2021-09-08",
+        "updatedOn": "2021-09-03"
+    }
+
+
+------------------------Admin
+
+
+{
+        "adminId": 5555,
+        "adminName": "ajay",
+        "adminRole": "bookadmin",
+        "adminPassword": "admin5555"
+    }
+
+------------------------------Book
+
+        "bookId": 1,
+        "isbn": 11111,
+        "bookName": "My Journey",
+        "authorName": "APJ Abdul Kalam",
+        "genre": "Autobiography",
+        "volume": 2,
+        "edition": 10,
+        "createdOn": "2021-08-07",
+        "updatedOn": "2021-09-08"
+    }
+
+
+
+--------------------------------------
