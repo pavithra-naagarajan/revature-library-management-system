@@ -205,7 +205,8 @@ public class IssueBookDAOImpl implements IssueBookDAO {
 			Session session = sessionFactory.getCurrentSession();
 
 			IssueBook issueDetails = getDetailsByIssueId(issueId);
-			issueDetails.setFineAmount(50);
+			int fine=issueDetails.getFineAmount();
+			issueDetails.setFineAmount(fine+50);
 			session.update(issueDetails);
 			MailSend.sendMail(issueDetails.getUser().getMailId(), "Fine Payment :",
 					"Hi, " + issueDetails.getUser().getFirstName() + "\nYour due date is over for the issued book."
