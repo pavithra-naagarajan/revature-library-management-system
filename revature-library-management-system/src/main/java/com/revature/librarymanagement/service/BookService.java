@@ -3,6 +3,7 @@ package com.revature.librarymanagement.service;
 import java.util.List;
 
 import com.revature.librarymanagement.dto.BookDto;
+import com.revature.librarymanagement.exception.MethodArgumentNotValidException;
 import com.revature.librarymanagement.model.Book;
 
 public interface BookService {
@@ -11,9 +12,10 @@ public interface BookService {
 	 * 
 	 * @param bookDto--object of BookDto
 	 * @return --it will return a message as added successfully
+	 * @throws MethodArgumentNotValidException 
 	 */
 
-	public String addBook(BookDto bookDto);
+	public String addBook(BookDto bookDto) throws MethodArgumentNotValidException;
 
 	/**
 	 * function to update a book

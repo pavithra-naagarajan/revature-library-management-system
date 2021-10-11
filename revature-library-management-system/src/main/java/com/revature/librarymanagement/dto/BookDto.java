@@ -2,15 +2,24 @@ package com.revature.librarymanagement.dto;
 
 import java.util.Date;
 
+import javax.validation.constraints.NotNull;
+
 import com.revature.librarymanagement.model.IssueBook;
 import com.revature.librarymanagement.model.RequestBook;
 
 public class BookDto {
+	
+	
 	private Long bookId;
+	@NotNull
 	private Long isbn;
+	@NotNull
 	private String bookName;
+	@NotNull
 	private String authorName;
+	@NotNull
 	private String publisher;
+	@NotNull
 	private String genre;
 	private int volume;
 	private int edition;

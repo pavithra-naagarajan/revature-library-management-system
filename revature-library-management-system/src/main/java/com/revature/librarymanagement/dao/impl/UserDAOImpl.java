@@ -3,6 +3,7 @@ package com.revature.librarymanagement.dao.impl;
 
 import java.time.LocalDateTime;
 
+
 import static com.revature.librarymanagement.util.LibraryManagementConstants.*;
 
 import java.util.Date;
@@ -53,10 +54,12 @@ public class UserDAOImpl implements UserDAO {
 			user.setStatus("Exist");
 			session.save(user);
 			AsynchronousMailSender.sendMail(user.getMailId(), "User Registration :",
-					"Hi, " + user.getFirstName() + "\nYour account is created successfully!\n\nThank You.");
+					"Hi, " + user.getFirstName() + "\nYour account is created successfully in library management system!"
+							+ "\nYou can login with your credentials and utilize all the functionalities given in user dashboard. Have a nice day!\n\nThank You.");
 
-			return "User Account created with : " + user.getUserId() + " at " + localTime;
+			return INSERT_USER + user.getUserId() + " at " + localTime;
 		} catch (Exception e) {
+			logger.debug(e.getMessage(),e);
 			throw new DatabaseException(ERROR_IN_INSERT);
 		}
 
@@ -72,9 +75,10 @@ public class UserDAOImpl implements UserDAO {
 			user.setStatus(status);
 			session.update(user);
 
-			return "User details updated successfully!";
+			return UPDATE_USER;
 
 		} catch (Exception e) {
+			logger.debug(e.getMessage(),e);
 			throw new DatabaseException(ERROR_IN_UPDATE);
 		}
 
@@ -90,8 +94,9 @@ public class UserDAOImpl implements UserDAO {
 			user.setUpdatedOn(new Date());
 			session.merge(user);
 
-			return "User status updated successfully!";
+			return UPDATE_USER_STATUS;
 		} catch (Exception e) {
+			logger.debug(e.getMessage(),e);
 			throw new DatabaseException(ERROR_IN_UPDATE);
 		}
 
@@ -107,9 +112,10 @@ public class UserDAOImpl implements UserDAO {
 			User user = getUserById(userId);
 
 			session.delete(user);
-			return "User Account deleted with : " + userId + " at " + localTime;
+			return DELETE_USER + userId + " at " + localTime;
 
 		} catch (Exception e) {
+			logger.debug(e.getMessage(),e);
 			throw new DatabaseException(ERROR_IN_DELETE);
 		}
 
@@ -124,6 +130,7 @@ public class UserDAOImpl implements UserDAO {
 
 			return session.get(User.class, userId);
 		} catch (Exception e) {
+			logger.debug(e.getMessage(),e);
 			throw new DatabaseException(ERROR_IN_FETCH);
 		}
 
@@ -140,6 +147,7 @@ public class UserDAOImpl implements UserDAO {
 					.setParameter(1, mobileNumber).getResultList();
 			return (resultList.isEmpty() ? null : resultList.get(0));
 		} catch (Exception e) {
+			logger.debug(e.getMessage(),e);
 			throw new DatabaseException(ERROR_IN_FETCH);
 		}
 	}
@@ -154,6 +162,7 @@ public class UserDAOImpl implements UserDAO {
 					.getResultList();
 			return (resultList.isEmpty() ? null : resultList.get(0));
 		} catch (Exception e) {
+			logger.debug(e.getMessage(),e);
 			throw new DatabaseException(ERROR_IN_FETCH);
 		}
 	}
@@ -168,6 +177,7 @@ public class UserDAOImpl implements UserDAO {
 					.setParameter(1, "%" + userRole + "%").getResultList();
 			return (resultList.isEmpty() ? null : resultList);
 		} catch (Exception e) {
+			logger.debug(e.getMessage(),e);
 			throw new DatabaseException(ERROR_IN_FETCH);
 		}
 	}
@@ -175,10 +185,14 @@ public class UserDAOImpl implements UserDAO {
 	@Override
 	public boolean isUserExists(Long userId) {
 		logger.info("Entering is User Exists Function");
-
+try {
 		Session session = sessionFactory.getCurrentSession();
 		User user = session.get(User.class, userId);
-		return (user != null);
+		return (user != null);}
+		catch (Exception e) {
+			logger.debug(e.getMessage(),e);
+			throw new DatabaseException(ERROR_IN_FETCH);
+		}
 	}
 
 	@Override
@@ -190,6 +204,7 @@ public class UserDAOImpl implements UserDAO {
 			Query<User> query = session.createQuery(GET_ALL_USERS, User.class);
 			return (query.getResultList().isEmpty() ? null : query.getResultList());
 		} catch (Exception e) {
+			logger.debug(e.getMessage(),e);
 			throw new DatabaseException(ERROR_IN_FETCH);
 		}
 	}
@@ -206,6 +221,7 @@ public class UserDAOImpl implements UserDAO {
 
 			return (resultList.isEmpty() ? null : resultList);
 		} catch (Exception e) {
+			logger.debug(e.getMessage(),e);
 			throw new DatabaseException(ERROR_IN_FETCH);
 		}
 	}
@@ -220,6 +236,7 @@ public class UserDAOImpl implements UserDAO {
 					.setParameter(2, password).getResultList();
 			return (resultList.isEmpty() ? null : resultList.get(0));
 		} catch (Exception e) {
+			logger.debug(e.getMessage(),e);
 			throw new DatabaseException(ERROR_IN_FETCH);
 		}
 	}
@@ -242,6 +259,7 @@ public class UserDAOImpl implements UserDAO {
 							+ "\n New Generated Password :" + user.getPassword() + "\n\nThank You.");
 			return "Password generated and updated succesfully!";
 		} catch (Exception e) {
+			logger.debug(e.getMessage(),e);
 			throw new DatabaseException(ERROR_IN_FETCH);
 		}
 	}
@@ -256,6 +274,7 @@ public class UserDAOImpl implements UserDAO {
 					.setParameter(4, "%" + value + "%").setParameter(5, "%" + value + "%").getResultList();
 			return (resultList.isEmpty() ? null : resultList);
 		} catch (Exception e) {
+			logger.debug(e.getMessage(),e);
 			throw new DatabaseException(ERROR_IN_FETCH);
 		}
 	}

@@ -3,6 +3,7 @@ package com.revature.librarymanagement.service;
 import java.util.List;
 
 import com.revature.librarymanagement.dto.AdminDto;
+import com.revature.librarymanagement.exception.MethodArgumentNotValidException;
 import com.revature.librarymanagement.model.Admin;
 
 public interface AdminService {
@@ -50,9 +51,10 @@ public interface AdminService {
 	 * it will add admin
 	 * 
 	 * @param adminDto
+	 * @throws MethodArgumentNotValidException 
 	 * @return--it will return a message added successfully
 	 */
-	public String addAdmin(AdminDto adminDto);
+	public String addAdmin(AdminDto adminDto) throws MethodArgumentNotValidException;
 
 	/**
 	 * it will update admin

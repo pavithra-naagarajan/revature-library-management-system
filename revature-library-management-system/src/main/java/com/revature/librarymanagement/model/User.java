@@ -2,6 +2,7 @@ package com.revature.librarymanagement.model;
 
 import java.io.Serializable;
 
+
 import java.util.Date;
 import java.util.Set;
 
@@ -15,6 +16,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -29,21 +31,27 @@ public class User implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long userId;
 
+	@NotNull
 	@Column(nullable = false)
 	private String firstName;
 
+	@NotNull
 	@Column(nullable = false)
 	private String lastName;
 
+	@NotNull
 	@Column(nullable = false)
 	private String password;
 
+	@NotNull
 	@Column(nullable = false, unique = true)
 	private String mailId;
 
+	@NotNull
 	@Column(nullable = false, unique = true)
 	private String mobileNumber;
 
+	@NotNull
 	@Column(nullable = false)
 	private String userRole;
 

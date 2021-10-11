@@ -1,12 +1,17 @@
 package com.revature.librarymanagement.dto;
 
+import javax.validation.constraints.NotNull;
+
 import com.revature.librarymanagement.model.Book;
 import com.revature.librarymanagement.model.User;
 
 public class RequestBookDto {
 	private Long requestId;
+	@NotNull
 	private int numberOfDays;
+	@NotNull
 	private User user;
+	@NotNull
 	private Book book;
 
 	public RequestBookDto() {

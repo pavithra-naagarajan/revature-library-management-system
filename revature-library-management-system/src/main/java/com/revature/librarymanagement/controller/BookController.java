@@ -2,6 +2,8 @@ package com.revature.librarymanagement.controller;
 
 import static com.revature.librarymanagement.util.LibraryManagementConstants.*;
 
+import javax.validation.Valid;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.revature.librarymanagement.dto.BookDto;
-import com.revature.librarymanagement.exception.NullValueException;
+import com.revature.librarymanagement.exception.MethodArgumentNotValidException;
 import com.revature.librarymanagement.response.HttpResponseStatus;
 import com.revature.librarymanagement.service.BookService;
 
@@ -53,10 +55,11 @@ public class BookController {
 	 * 
 	 * @param bookDto--object of BookDto
 	 * @return --it will return a message as added successfully
+	 * @throws MethodArgumentNotValidException 
 	 */
 
 	@PostMapping
-	public ResponseEntity<HttpResponseStatus> addBook(@RequestBody BookDto bookDto) {
+	public ResponseEntity<HttpResponseStatus> addBook(@Valid @RequestBody BookDto bookDto) throws MethodArgumentNotValidException {
 		logger.info("Entering Add Book Function");
 		return new ResponseEntity<>(new HttpResponseStatus(HttpStatus.CREATED.value(), bookService.addBook(bookDto)),
 				HttpStatus.CREATED);
@@ -185,15 +188,11 @@ public class BookController {
 	@GetMapping("/searchbooks/{value}")
 	public ResponseEntity<HttpResponseStatus> searchBooks(@PathVariable String value) {
 		logger.info("Entering Search Books Function");
-		try {
+		
 			return new ResponseEntity<>(
 					new HttpResponseStatus(HttpStatus.OK.value(), GET_OPERATION, bookService.searchBooks(value)),
 					HttpStatus.OK);
-		} catch (NullValueException e) {
-			return new ResponseEntity<>(new HttpResponseStatus(HttpStatus.NO_CONTENT.value(), e.getMessage(),
-					bookService.searchBooks(value)), HttpStatus.NO_CONTENT);
-
-		}
+		
 	}
 
 }

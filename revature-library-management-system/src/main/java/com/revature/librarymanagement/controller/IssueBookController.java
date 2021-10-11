@@ -4,6 +4,9 @@ import static com.revature.librarymanagement.util.LibraryManagementConstants.*;
 
 import java.io.ByteArrayInputStream;
 import java.util.Date;
+
+import javax.validation.Valid;
+
 import org.springframework.http.HttpHeaders;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -24,7 +27,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.revature.librarymanagement.dto.IssueBookDto;
-import com.revature.librarymanagement.exception.NullValueException;
+import com.revature.librarymanagement.exception.MethodArgumentNotValidException;
 import com.revature.librarymanagement.model.Book;
 import com.revature.librarymanagement.model.IssueBook;
 import com.revature.librarymanagement.response.HttpResponseStatus;
@@ -57,10 +60,11 @@ public class IssueBookController {
 	 * 
 	 * @param issueBookDto--object of IssueBookDto
 	 * @return --it will return a message as issued successfully
+	 * @throws MethodArgumentNotValidException 
 	 */
 	@PostMapping("/{numberOfDays}")
-	public ResponseEntity<HttpResponseStatus> issueBook(@RequestBody IssueBookDto issueBookDto,
-			@PathVariable int numberOfDays) {
+	public ResponseEntity<HttpResponseStatus> issueBook(@Valid @RequestBody IssueBookDto issueBookDto,
+			@PathVariable int numberOfDays) throws MethodArgumentNotValidException {
 		logger.info("Entering issue book Function");
 
 		return new ResponseEntity<>(new HttpResponseStatus(HttpStatus.CREATED.value(),
@@ -104,14 +108,10 @@ public class IssueBookController {
 	public ResponseEntity<HttpResponseStatus> getDetailsByUserId(@PathVariable("userId") Long userId) {
 		logger.info("Entering Get issued book details By user Id Function");
 
-		try {
+		
 			return new ResponseEntity<>(new HttpResponseStatus(HttpStatus.OK.value(), GET_OPERATION,
 					issueBookService.getDetailsByUserId(userId)), HttpStatus.OK);
-		} catch (NullValueException e) {
-			return new ResponseEntity<>(new HttpResponseStatus(HttpStatus.NO_CONTENT.value(), e.getMessage(),
-					issueBookService.getDetailsByUserId(userId)), HttpStatus.NO_CONTENT);
-
-		}
+		
 
 	}
 

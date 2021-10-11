@@ -40,12 +40,15 @@ public class AdminDAOImpl implements AdminDAO {
 	@Override
 	public Admin getAdminById(Long adminId) {
 		logger.info("Entering get Admin By Id Function");
-
+		try {
 		Session session = sessionFactory.getCurrentSession();
 
 		return session.get(Admin.class, adminId);
+		}catch (Exception e) {
+			logger.debug(e.getMessage(),e);
+			throw new DatabaseException(ERROR_IN_FETCH);
 	}
-
+	}
 	@Override
 	public List<Admin> getAdminByName(String adminName) {
 		logger.info("Entering get Admin By name Function");
@@ -56,6 +59,7 @@ public class AdminDAOImpl implements AdminDAO {
 					.getResultList();
 			return (resultList.isEmpty() ? null : resultList);
 		} catch (Exception e) {
+			logger.debug(e.getMessage(),e);
 			throw new DatabaseException(ERROR_IN_FETCH);
 		}
 	}
@@ -70,6 +74,7 @@ public class AdminDAOImpl implements AdminDAO {
 					.getResultList();
 			return (resultList.isEmpty() ? null : resultList);
 		} catch (Exception e) {
+			logger.debug(e.getMessage(),e);
 			throw new DatabaseException(ERROR_IN_FETCH);
 		}
 	}
@@ -77,10 +82,14 @@ public class AdminDAOImpl implements AdminDAO {
 	@Override
 	public boolean isAdminExists(Long adminId) {
 		logger.info("Entering is admin exists Function");
-
+		try {
 		Session session = sessionFactory.getCurrentSession();
 		Admin admin = session.get(Admin.class, adminId);
 		return (admin != null);
+		} catch (Exception e) {
+			logger.debug(e.getMessage(),e);
+			throw new DatabaseException(ERROR_IN_FETCH);
+		}
 	}
 
 	@Override
@@ -92,6 +101,7 @@ public class AdminDAOImpl implements AdminDAO {
 			Query<Admin> query = session.createQuery(GET_ALL_ADMINS, Admin.class);
 			return (query.getResultList().isEmpty() ? null : query.getResultList());
 		} catch (Exception e) {
+			logger.debug(e.getMessage(),e);
 			throw new DatabaseException(ERROR_IN_FETCH);
 		}
 	}
@@ -105,9 +115,10 @@ public class AdminDAOImpl implements AdminDAO {
 		try {
 			Session session = sessionFactory.getCurrentSession();
 			session.delete(admin);
-			return "Admin Account deleted with : " + adminId + " at " + localTime;
+			return DELETE_ADMIN + adminId + " at " + localTime;
 
 		} catch (Exception e) {
+			logger.debug(e.getMessage(),e);
 			throw new DatabaseException(ERROR_IN_DELETE);
 		}
 
@@ -129,9 +140,10 @@ public class AdminDAOImpl implements AdminDAO {
 							+ "\nSuper Admin registered your profile.Use this login credentials to login further!"
 							+ "\nAdmin Id :" + admin.getAdminId() + "\nNew Password :" + admin.getAdminPassword()
 							+ "\n\nThank You.");
-			return "Admin Account created with : " + adminId + " at " + localTime;
+			return INSERT_ADMIN+ adminId + " at " + localTime;
 
 		} catch (Exception e) {
+			logger.debug(e.getMessage(),e);
 			throw new DatabaseException(ERROR_IN_INSERT);
 		}
 
@@ -147,9 +159,10 @@ public class AdminDAOImpl implements AdminDAO {
 			admin.setUpdatedOn(new Date());
 
 			session.merge(admin);
-			return "Admin details updated successfully!";
+			return UPDATE_ADMIN;
 
 		} catch (Exception e) {
+			logger.debug(e.getMessage(),e);
 			throw new DatabaseException(ERROR_IN_UPDATE);
 		}
 
@@ -163,8 +176,10 @@ public class AdminDAOImpl implements AdminDAO {
 			Session session = sessionFactory.getCurrentSession();
 			List<Admin> resultList = session.createQuery(ADMIN_LOGIN, Admin.class).setParameter(1, adminId)
 					.setParameter(2, adminPassword).getResultList();
+			logger.info("Admin login success");
 			return (resultList.isEmpty() ? null : resultList.get(0));
 		} catch (Exception e) {
+			logger.debug(e.getMessage(),e);
 			throw new DatabaseException(ERROR_IN_FETCH);
 		}
 	}

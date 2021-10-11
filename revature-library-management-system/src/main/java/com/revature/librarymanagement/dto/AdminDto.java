@@ -2,11 +2,18 @@ package com.revature.librarymanagement.dto;
 
 import java.util.Date;
 
+import javax.validation.constraints.NotNull;
+
 public class AdminDto {
+	
 	private Long adminId;
+	@NotNull
 	private String adminName;
+	@NotNull
 	private String adminRole;
+	@NotNull
 	private String adminPassword;
+	@NotNull
 	private String mailId;
 	private Date updatedOn;
 	private Date createdOn;

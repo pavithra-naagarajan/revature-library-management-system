@@ -12,6 +12,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 @Entity
 
@@ -24,13 +25,16 @@ public class RequestBook implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long requestId;
 
+	@NotNull
 	@Column(nullable = false)
 	private int numberOfDays;
 
+	@NotNull
 	@ManyToOne
 	@JoinColumn(nullable = false)
 	private User user;
 
+	@NotNull
 	@OneToOne
 	@JoinColumn(nullable = false, unique = true)
 

@@ -16,6 +16,7 @@ import com.revature.librarymanagement.dao.UserDAO;
 import com.revature.librarymanagement.dto.IssueBookDto;
 import com.revature.librarymanagement.exception.DuplicateIdException;
 import com.revature.librarymanagement.exception.IdNotFoundException;
+import com.revature.librarymanagement.exception.MethodArgumentNotValidException;
 import com.revature.librarymanagement.exception.NullValueException;
 import com.revature.librarymanagement.mapper.IssueBookMapper;
 import com.revature.librarymanagement.model.Book;
@@ -33,16 +34,20 @@ public class IssueBookServiceImpl implements IssueBookService {
 	private UserDAO userDAO;
 
 	@Override
-	public String issueBook(IssueBookDto issueBookDto, int numberOfDays) {
+	public String issueBook(IssueBookDto issueBookDto, int numberOfDays) throws MethodArgumentNotValidException {
 		logger.info("Entering issue book Function");
 
 		IssueBook issueBook = IssueBookMapper.dtoToEntity(issueBookDto);
 		Long issueId = issueBook.getIssueId();
 
 		if (issueBookDAO.isIssuedDetailsExists(issueId))
-			throw new DuplicateIdException("Issued book already exists with same Id!");
-
-		return issueBookDAO.issueBook(issueBook, numberOfDays);
+			throw new DuplicateIdException(DUPLICATE_ISSUEDBOOK);
+		try {
+		return issueBookDAO.issueBook(issueBook, numberOfDays);}
+		catch(Exception e) {
+			logger.debug(e.getMessage(), e);
+			throw new MethodArgumentNotValidException(VALIDATION_FAIL);
+		}
 
 	}
 
@@ -64,7 +69,7 @@ public class IssueBookServiceImpl implements IssueBookService {
 		if (issueBookDAO.isIssuedDetailsExists(issueId))
 			return issueBookDAO.getDetailsByIssueId(issueId);
 
-		throw new IdNotFoundException("IssuedBook details with:" + issueId + " Not Found!");
+		throw new IdNotFoundException(ID_NOT_FOUND);
 	}
 
 	@Override
@@ -76,7 +81,7 @@ public class IssueBookServiceImpl implements IssueBookService {
 		if (issueBookDAO.isIssuedDetailsExists(issueId))
 			return issueBookDAO.updateIssuedBook(issueBook);
 
-		throw new IdNotFoundException("Issued Book details with:" + issueId + " Not Found to update!");
+		throw new IdNotFoundException(NOT_FOUND_TOUPDATE);
 	}
 
 	@Override
@@ -86,7 +91,7 @@ public class IssueBookServiceImpl implements IssueBookService {
 		if (issueBookDAO.isIssuedDetailsExists(issueId))
 			return issueBookDAO.deleteIssuedBook(issueId);
 
-		throw new IdNotFoundException("Issued Book details with:" + issueId + " Not Found to delete!");
+		throw new IdNotFoundException(NOT_FOUND_TODELETE);
 	}
 
 	@Override
@@ -100,8 +105,11 @@ public class IssueBookServiceImpl implements IssueBookService {
 	public List<IssueBook> getDetailsByUserId(Long userId) {
 		User user = userDAO.getUserById(userId);
 		logger.info("Entering get Details By UserId function");
-
-		return issueBookDAO.getDetailsByUserId(user);
+		
+		List<IssueBook> issuedBooks=issueBookDAO.getDetailsByUserId(user);
+		if (CollectionUtils.isEmpty(issuedBooks))
+			throw new NullValueException(NO_RECORDS);
+		return issuedBooks;
 	}
 
 	@Override
@@ -118,14 +126,20 @@ public class IssueBookServiceImpl implements IssueBookService {
 	public List<IssueBook> getDetailsByIssueDate(Date issueDate) {
 		logger.info("Entering get Details By issueDate function");
 
-		return issueBookDAO.getDetailsByIssueDate(issueDate);
+		List<IssueBook> issuedBooks=issueBookDAO.getDetailsByIssueDate(issueDate);
+		if (CollectionUtils.isEmpty(issuedBooks))
+			throw new NullValueException(NO_RECORDS);
+		return issuedBooks;
 	}
 
 	@Override
 	public List<IssueBook> getDetailsByDueDate(Date dueDate) {
 		logger.info("Entering get Details By dueDate function");
-
-		return issueBookDAO.getDetailsByDueDate(dueDate);
+		
+		List<IssueBook> issuedBooks=issueBookDAO.getDetailsByDueDate(dueDate);
+		if (CollectionUtils.isEmpty(issuedBooks))
+			throw new NullValueException(NO_RECORDS);
+		return issuedBooks;
 	}
 
 	@Override

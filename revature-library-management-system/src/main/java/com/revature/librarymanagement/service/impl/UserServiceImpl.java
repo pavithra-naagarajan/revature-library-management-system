@@ -1,6 +1,8 @@
 
 package com.revature.librarymanagement.service.impl;
 
+
+
 import java.util.List;
 
 import static com.revature.librarymanagement.util.LibraryManagementConstants.*;
@@ -16,6 +18,7 @@ import com.revature.librarymanagement.dao.UserDAO;
 import com.revature.librarymanagement.dto.UserDto;
 import com.revature.librarymanagement.exception.DuplicateIdException;
 import com.revature.librarymanagement.exception.IdNotFoundException;
+import com.revature.librarymanagement.exception.MethodArgumentNotValidException;
 import com.revature.librarymanagement.exception.NullValueException;
 import com.revature.librarymanagement.mapper.UserMapper;
 import com.revature.librarymanagement.model.User;
@@ -30,7 +33,7 @@ public class UserServiceImpl implements UserService {
 	private UserDAO userDAO;
 
 	@Override
-	public String addUser(UserDto userDto) {
+	public String addUser(UserDto userDto) throws MethodArgumentNotValidException {
 		logger.info("Entering add user Function");
 
 		User user = UserMapper.dtoToEntity(userDto);
@@ -38,17 +41,22 @@ public class UserServiceImpl implements UserService {
 		String mailId = user.getMailId();
 		String mobileNumber = user.getMobileNumber();
 		if (userDAO.isUserExists(userId)) {
-			throw new DuplicateIdException("User account with Id:" + userId + " already exists!");
+			throw new DuplicateIdException(USER_EXIST_ALREADY);
 
 		}
 
 		if (userDAO.getUserByMailId(mailId) != null || userDAO.getUserByMobileNumber(mobileNumber) != null) {
 
-			throw new DuplicateIdException("User account already exists with same details!");
+			throw new DuplicateIdException(DUPLICATE_USER);
 
 		}
 
-		return userDAO.addUser(user);
+		try {
+			return userDAO.addUser(user);
+		} catch (Exception e) {
+			logger.debug(e.getMessage(), e);
+			throw new MethodArgumentNotValidException(VALIDATION_FAIL);
+		}
 
 	}
 
@@ -63,7 +71,7 @@ public class UserServiceImpl implements UserService {
 			return userDAO.updateUser(user);
 
 		else
-			throw new IdNotFoundException("User with Id:" + userId + " Not Found to Update!");
+			throw new IdNotFoundException(NOT_FOUND_TOUPDATE);
 
 	}
 
@@ -76,19 +84,19 @@ public class UserServiceImpl implements UserService {
 			return userDAO.deleteUserById(userId);
 		else
 
-			throw new IdNotFoundException("User Id:" + userId + " Not Found to delete!");
+			throw new IdNotFoundException(NOT_FOUND_TODELETE);
 
 	}
 
 	@Override
-	public User getUserById(Long userId) {
+	public User getUserById(Long userId){
 		logger.info("Entering get User By Id Function");
-
+		
 		if (userDAO.isUserExists(userId))
 			return userDAO.getUserById(userId);
 		else
 
-			throw new IdNotFoundException("User with Id:" + userId + " Not Found!");
+			throw new IdNotFoundException(ID_NOT_FOUND);
 
 	}
 
@@ -97,9 +105,12 @@ public class UserServiceImpl implements UserService {
 		logger.info("Entering get User By FirstAndLastName Function");
 
 		List<User> users = userDAO.getUserByFirstAndLastName(name);
+
 		if (CollectionUtils.isEmpty(users))
 			throw new NullValueException(NO_RECORDS);
+
 		return users;
+
 	}
 
 	@Override
@@ -170,15 +181,17 @@ public class UserServiceImpl implements UserService {
 			return userDAO.forgotPassword(mailId, PasswordGenerator.generatePassword());
 
 		else
-			throw new IdNotFoundException("User Not Found!");
+			throw new IdNotFoundException(ID_NOT_FOUND);
 
 	}
 
 	@Override
 	public List<User> searchUsers(String value) {
 		logger.info("Entering search Users Function");
-
-		return userDAO.searchUsers(value);
+		List<User> users = userDAO.searchUsers(value);
+		if (CollectionUtils.isEmpty(users))
+			throw new NullValueException(NO_RECORDS);
+		return users;
 
 	}
 
@@ -186,7 +199,11 @@ public class UserServiceImpl implements UserService {
 	public String updateUserStatus(Long userId, String status) {
 		logger.info("Entering update user status Function");
 
-		return userDAO.updateUserStatus(userId, status);
+		if (userDAO.isUserExists(userId))
+			return userDAO.updateUserStatus(userId, status);
+		else
+
+			throw new IdNotFoundException(ID_NOT_FOUND);
 	}
 
 }

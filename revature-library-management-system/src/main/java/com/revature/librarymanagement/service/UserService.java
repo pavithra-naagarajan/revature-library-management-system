@@ -3,7 +3,9 @@ package com.revature.librarymanagement.service;
 
 import java.util.List;
 
+
 import com.revature.librarymanagement.dto.UserDto;
+import com.revature.librarymanagement.exception.MethodArgumentNotValidException;
 import com.revature.librarymanagement.model.User;
 
 public interface UserService {
@@ -12,9 +14,10 @@ public interface UserService {
 	 * function to insert a user
 	 * 
 	 * @param userDto--Object of UserDto
+	 * @throws MethodArgumentNotValidException 
 	 * @return--it will return a message as added successfully
 	 */
-	public String addUser(UserDto userDto);
+	public String addUser(UserDto userDto) throws MethodArgumentNotValidException;
 
 	/**
 	 * function to update a user

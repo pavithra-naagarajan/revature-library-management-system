@@ -14,6 +14,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -28,24 +29,30 @@ public class Book implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long bookId;
 
+	@NotNull
 	@Column(nullable = false, unique = true)
 	private Long isbn;
 
+	@NotNull
 	@Column(nullable = false)
 	private String bookName;
 
+	@NotNull
 	@Column(nullable = false)
 	private String authorName;
 
+	@NotNull
 	@Column(nullable = false)
 	private String publisher;
+	
+	@NotNull
 	@Column(nullable = false)
 	private String genre;
 
-	@Column(nullable = false)
+	@Column
 	private int volume;
 
-	@Column(nullable = false)
+	@Column
 	private int edition;
 
 	@Column

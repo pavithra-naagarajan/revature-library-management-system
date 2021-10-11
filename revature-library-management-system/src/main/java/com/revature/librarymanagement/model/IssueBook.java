@@ -16,6 +16,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
 
 @Entity
 
@@ -37,10 +38,12 @@ public class IssueBook implements Serializable {
 	@Column
 	private int fineAmount;
 
+	@NotNull
 	@ManyToOne
 	@JoinColumn(nullable = false)
 	private User user;
 
+	@NotNull
 	@OneToOne
 	@JoinColumn(nullable = false, unique = true)
 

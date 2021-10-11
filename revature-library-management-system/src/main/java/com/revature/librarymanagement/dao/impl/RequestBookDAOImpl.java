@@ -49,8 +49,10 @@ public class RequestBookDAOImpl implements RequestBookDAO {
 			Long userId = requestBook.getUser().getUserId();
 			userService.updateUserStatus(userId, "Active");
 			session.save(requestBook);
-			return "Book request is added successfully at " + localTime;
+			return INSERT_REQUEST + localTime;
 		} catch (Exception e) {
+			logger.debug(e.getMessage(),e);
+
 			throw new DatabaseException(ERROR_IN_INSERT);
 		}
 
@@ -66,6 +68,8 @@ public class RequestBookDAOImpl implements RequestBookDAO {
 			Query<RequestBook> query = session.createQuery("select r from RequestBook r");
 			return (query.getResultList().isEmpty() ? null : query.getResultList());
 		} catch (Exception e) {
+			logger.debug(e.getMessage(),e);
+
 			throw new DatabaseException(ERROR_IN_FETCH);
 		}
 	}
@@ -79,8 +83,10 @@ public class RequestBookDAOImpl implements RequestBookDAO {
 			Session session = sessionFactory.getCurrentSession();
 			RequestBook requestedBook = getDetailsByRequestId(requestId);
 			session.delete(requestedBook);
-			return "Book requested details deleted at " + localTime;
+			return DELETE_REQUEST + localTime;
 		} catch (Exception e) {
+			logger.debug(e.getMessage(),e);
+
 			throw new DatabaseException(ERROR_IN_DELETE);
 		}
 	}
@@ -94,6 +100,8 @@ public class RequestBookDAOImpl implements RequestBookDAO {
 
 			return session.get(RequestBook.class, requestId);
 		} catch (Exception e) {
+			logger.debug(e.getMessage(),e);
+
 			throw new DatabaseException(ERROR_IN_FETCH);
 		}
 	}

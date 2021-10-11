@@ -11,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "admins_table")
@@ -21,17 +22,22 @@ public class Admin {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long adminId;
 
+	@NotNull
 	@Column(nullable = false)
 	private String adminName;
 
+	@NotNull
 	@Column(nullable = false)
 	private String adminRole;
 
+	@NotNull
 	@Column(nullable = false, unique = true)
 	private String mailId;
 
+	@NotNull
 	@Column(nullable = false)
 	private String adminPassword;
+	
 	@Temporal(TemporalType.DATE)
 	private Date createdOn;
 	@Temporal(TemporalType.DATE)

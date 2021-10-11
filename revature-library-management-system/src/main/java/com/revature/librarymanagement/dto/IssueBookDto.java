@@ -2,6 +2,8 @@ package com.revature.librarymanagement.dto;
 
 import java.util.Date;
 
+import javax.validation.constraints.NotNull;
+
 import com.revature.librarymanagement.model.Book;
 import com.revature.librarymanagement.model.User;
 
@@ -10,7 +12,9 @@ public class IssueBookDto {
 	private Date issueDate;
 	private Date dueDate;
 	private int fineAmount;
+	@NotNull
 	private User user;
+	@NotNull
 	private Book book;
 
 	public IssueBookDto() {

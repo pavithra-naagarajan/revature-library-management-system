@@ -3,6 +3,8 @@ package com.revature.librarymanagement.controller;
 
 import static com.revature.librarymanagement.util.LibraryManagementConstants.*;
 
+import javax.validation.Valid;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.revature.librarymanagement.dto.UserDto;
-import com.revature.librarymanagement.exception.NullValueException;
+import com.revature.librarymanagement.exception.MethodArgumentNotValidException;
 import com.revature.librarymanagement.response.HttpResponseStatus;
 import com.revature.librarymanagement.service.UserService;
 
@@ -57,6 +59,7 @@ public class UserController {
 	/**
 	 * 
 	 * @param userId--based on userId it will perform function getUserById
+	 * @throws InputMismatchValidation 
 	 * @return--return the object of User repective to the userId
 	 */
 	@GetMapping("{userId}")
@@ -72,11 +75,12 @@ public class UserController {
 	 * function to insert a user
 	 * 
 	 * @param userDto--Object of UserDto
+	 * @throws MethodArgumentNotValidException 
 	 * @return--it will return a message as added successfully
 	 */
 
 	@PostMapping
-	public ResponseEntity<HttpResponseStatus> addUser(@RequestBody UserDto userDto) {
+	public ResponseEntity<HttpResponseStatus> addUser(@Valid @RequestBody UserDto userDto) throws MethodArgumentNotValidException {
 		logger.info("Entering add user Function");
 
 		return new ResponseEntity<>(new HttpResponseStatus(HttpStatus.CREATED.value(), userService.addUser(userDto)),
@@ -116,11 +120,12 @@ public class UserController {
 	/**
 	 * 
 	 * @param name
+	 * @throws InputMismatchValidation 
 	 * @return--it will return the user based on firstname and lastname
 	 */
 
 	@GetMapping("/name/{name}")
-	public ResponseEntity<HttpResponseStatus> getUserByFirstAndLastName(@PathVariable String name) {
+	public ResponseEntity<HttpResponseStatus> getUserByFirstAndLastName(@PathVariable String name){
 		logger.info("Entering get user by name Function");
 		return new ResponseEntity<>(new HttpResponseStatus(HttpStatus.OK.value(), GET_OPERATION,
 				userService.getUserByFirstAndLastName(name)), HttpStatus.OK);
@@ -179,15 +184,11 @@ public class UserController {
 	public ResponseEntity<HttpResponseStatus> getAllUsers() {
 		logger.info("Entering get all users Function");
 
-		try {
+	
 			return new ResponseEntity<>(
 					new HttpResponseStatus(HttpStatus.OK.value(), GET_OPERATION, userService.getAllUsers()),
 					HttpStatus.OK);
-		} catch (NullValueException e) {
-			return new ResponseEntity<>(new HttpResponseStatus(HttpStatus.NO_CONTENT.value(), e.getMessage()),
-					HttpStatus.NO_CONTENT);
-
-		}
+		
 
 	}
 
@@ -215,16 +216,12 @@ public class UserController {
 	@GetMapping("/searchusers/{value}")
 	public ResponseEntity<HttpResponseStatus> searchUsers(@PathVariable String value) {
 		logger.info("Entering Search Users Function");
-		try {
+		
 			return new ResponseEntity<>(
 
 					new HttpResponseStatus(HttpStatus.OK.value(), GET_OPERATION, userService.searchUsers(value)),
 					HttpStatus.OK);
-		} catch (NullValueException e) {
-			return new ResponseEntity<>(new HttpResponseStatus(HttpStatus.NO_CONTENT.value(), e.getMessage(),
-					userService.searchUsers(value)), HttpStatus.NO_CONTENT);
-
-		}
+		
 
 	}
 

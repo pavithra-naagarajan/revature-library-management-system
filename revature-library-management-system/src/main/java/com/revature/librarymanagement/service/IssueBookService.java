@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.revature.librarymanagement.dto.IssueBookDto;
+import com.revature.librarymanagement.exception.MethodArgumentNotValidException;
 import com.revature.librarymanagement.model.Book;
 import com.revature.librarymanagement.model.IssueBook;
 
@@ -15,8 +16,9 @@ public interface IssueBookService {
 	 * 
 	 * @param issueBookDto--object of IssueBookDto
 	 * @return --it will return a message as issued successfully
+	 * @throws MethodArgumentNotValidException 
 	 */
-	public String issueBook(IssueBookDto issueBookDto, int numberOfDays);
+	public String issueBook(IssueBookDto issueBookDto, int numberOfDays) throws MethodArgumentNotValidException;
 
 	/**
 	 * 

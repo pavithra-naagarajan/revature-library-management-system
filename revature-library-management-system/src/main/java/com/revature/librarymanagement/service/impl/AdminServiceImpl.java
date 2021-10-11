@@ -13,6 +13,7 @@ import com.revature.librarymanagement.dao.AdminDAO;
 import com.revature.librarymanagement.dto.AdminDto;
 import com.revature.librarymanagement.exception.DuplicateIdException;
 import com.revature.librarymanagement.exception.IdNotFoundException;
+import com.revature.librarymanagement.exception.MethodArgumentNotValidException;
 import com.revature.librarymanagement.exception.NullValueException;
 import com.revature.librarymanagement.mapper.AdminMapper;
 import com.revature.librarymanagement.model.Admin;
@@ -30,10 +31,10 @@ public class AdminServiceImpl implements AdminService {
 	public Admin getAdminById(Long adminId) {
 		logger.info("Entering get Admin By Id Function");
 
-		if (adminDAO.isAdminExists(adminId)) {
+		if (adminDAO.isAdminExists(adminId))
 			return adminDAO.getAdminById(adminId);
-		}
-		throw new IdNotFoundException(ID_NOT_FOUND);
+		else
+			throw new IdNotFoundException(ID_NOT_FOUND);
 
 	}
 
@@ -83,23 +84,28 @@ public class AdminServiceImpl implements AdminService {
 		if (adminDAO.isAdminExists(adminId)) {
 			return adminDAO.deleteAdminById(adminId);
 		}
-		throw new IdNotFoundException(ID_NOT_FOUND);
+		throw new IdNotFoundException(NOT_FOUND_TODELETE);
 
 	}
 
 	@Override
-	public String addAdmin(AdminDto adminDto) {
+	public String addAdmin(AdminDto adminDto) throws MethodArgumentNotValidException {
 		logger.info("Entering add Admin Function");
 
 		Admin admin = AdminMapper.dtoToEntity(adminDto);
 		Long adminId = admin.getAdminId();
 
 		if (adminDAO.isAdminExists(adminId)) {
-			throw new DuplicateIdException("Admin account with Id:" + admin + " already exists!");
+			throw new DuplicateIdException(ADMIN_EXIST_ALREADY);
 
 		}
 
-		return adminDAO.addAdmin(admin);
+		try {
+			return adminDAO.addAdmin(admin);
+		} catch (Exception e) {
+			logger.debug(e.getMessage(), e);
+			throw new MethodArgumentNotValidException(VALIDATION_FAIL);
+		}
 	}
 
 	@Override
@@ -111,15 +117,17 @@ public class AdminServiceImpl implements AdminService {
 		if (adminDAO.isAdminExists(adminId)) {
 			return adminDAO.updateAdmin(admin);
 		}
-		throw new IdNotFoundException(ID_NOT_FOUND);
+		throw new IdNotFoundException(NOT_FOUND_TOUPDATE);
 
 	}
 
 	@Override
 	public Admin adminLogin(Long adminId, String adminPassword) {
 		logger.info("Entering admin login Function");
-
-		return adminDAO.adminLogin(adminId, adminPassword);
+		if (adminDAO.isAdminExists(adminId))
+			return adminDAO.adminLogin(adminId, adminPassword);
+		else
+			throw new IdNotFoundException(ID_NOT_FOUND);
 
 	}
 

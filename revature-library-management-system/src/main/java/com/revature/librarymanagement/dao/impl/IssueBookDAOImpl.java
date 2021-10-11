@@ -84,9 +84,10 @@ public class IssueBookDAOImpl implements IssueBookDAO {
 							+ "\nBook Name :" + book.getBookName() + "\nAuthor Name :" + book.getAuthorName()
 							+ "\nIssue Date :" + issueBook.getIssueDate() + "\nDue Date :" + issueBook.getDueDate()
 							+ "\nThank You.");
-			return "Book is issued successfully with : " + issueId + " at " + localTime;
+			return ISSUE_BOOK + issueId + " at " + localTime;
 
 		} catch (Exception e) {
+			logger.debug(e.getMessage(), e);
 			throw new DatabaseException(ERROR_IN_INSERT);
 		}
 
@@ -102,6 +103,7 @@ public class IssueBookDAOImpl implements IssueBookDAO {
 			Query<IssueBook> query = session.createQuery(GET_ALL_ISSUEDBOOKS, IssueBook.class);
 			return (query.getResultList().isEmpty() ? null : query.getResultList());
 		} catch (Exception e) {
+			logger.debug(e.getMessage(), e);
 			throw new DatabaseException(ERROR_IN_FETCH);
 		}
 	}
@@ -115,6 +117,7 @@ public class IssueBookDAOImpl implements IssueBookDAO {
 
 			return session.get(IssueBook.class, issueId);
 		} catch (Exception e) {
+			logger.debug(e.getMessage(), e);
 			throw new DatabaseException(ERROR_IN_FETCH);
 		}
 	}
@@ -127,9 +130,10 @@ public class IssueBookDAOImpl implements IssueBookDAO {
 		try {
 			Session session = sessionFactory.getCurrentSession();
 			session.merge(issueBook);
-			return "Issued book details updated successfully!";
+			return UPDATE_ISSUE;
 
 		} catch (Exception e) {
+			logger.debug(e.getMessage(), e);
 			throw new DatabaseException(ERROR_IN_UPDATE);
 		}
 
@@ -149,9 +153,10 @@ public class IssueBookDAOImpl implements IssueBookDAO {
 			issueId = issuedDetails.getIssueId();
 
 			session.delete(issuedDetails);
-			return "Book issued details deleted with : " + issueId + " at " + localTime;
+			return DELETE_ISSUE + issueId + " at " + localTime;
 
 		} catch (Exception e) {
+			logger.debug(e.getMessage(), e);
 			throw new DatabaseException(ERROR_IN_DELETE);
 		}
 	}
@@ -159,10 +164,14 @@ public class IssueBookDAOImpl implements IssueBookDAO {
 	@Override
 	public boolean isIssuedDetailsExists(Long issueId) {
 		logger.info("Entering isIssuedDetailsExists Function");
-
-		Session session = sessionFactory.getCurrentSession();
-		IssueBook issuedDetails = session.get(IssueBook.class, issueId);
-		return (issuedDetails != null);
+		try {
+			Session session = sessionFactory.getCurrentSession();
+			IssueBook issuedDetails = session.get(IssueBook.class, issueId);
+			return (issuedDetails != null);
+		} catch (Exception e) {
+			logger.debug(e.getMessage(), e);
+			throw new DatabaseException(ERROR_IN_FETCH);
+		}
 	}
 
 	@Override
@@ -176,6 +185,7 @@ public class IssueBookDAOImpl implements IssueBookDAO {
 					.getResultList();
 			return (resultList.isEmpty() ? null : resultList);
 		} catch (Exception e) {
+			logger.debug(e.getMessage(), e);
 			throw new DatabaseException(ERROR_IN_FETCH);
 		}
 	}
@@ -191,6 +201,7 @@ public class IssueBookDAOImpl implements IssueBookDAO {
 					.getResultList();
 			return (resultList.isEmpty() ? null : resultList.get(0));
 		} catch (Exception e) {
+			logger.debug(e.getMessage(), e);
 			throw new DatabaseException(ERROR_IN_FETCH);
 		}
 	}
@@ -205,6 +216,7 @@ public class IssueBookDAOImpl implements IssueBookDAO {
 					.setParameter(1, issueDate).getResultList();
 			return (resultList.isEmpty() ? null : resultList);
 		} catch (Exception e) {
+			logger.debug(e.getMessage(), e);
 			throw new DatabaseException(ERROR_IN_FETCH);
 		}
 	}
@@ -220,6 +232,7 @@ public class IssueBookDAOImpl implements IssueBookDAO {
 					.getResultList();
 			return (resultList.isEmpty() ? null : resultList);
 		} catch (Exception e) {
+			logger.debug(e.getMessage(), e);
 			throw new DatabaseException(ERROR_IN_FETCH);
 		}
 	}
@@ -259,8 +272,9 @@ public class IssueBookDAOImpl implements IssueBookDAO {
 					+ "\n Book Name :" + issueDetails.getBook().getBookName()
 					+ "\nPlease be ensure that you have to renew the issued book within due date.\nCheck the fine Amount in your dashboard!"
 					+ "\n\nThank You.");
-			return "Fine amount updated succesfully!";
+			return UPDATE_FINE;
 		} catch (Exception e) {
+			logger.debug(e.getMessage(), e);
 			throw new DatabaseException(ERROR_IN_UPDATE);
 		}
 	}
@@ -288,8 +302,9 @@ public class IssueBookDAOImpl implements IssueBookDAO {
 					"Hi, " + issueDetails.getUser().getFirstName() + "\nYour due date is changed for the issued book."
 							+ "\n Book Name :" + issueDetails.getBook().getBookName()
 							+ "\nCheck it once again in your user dashboard!" + "\n\nThank You.");
-			return "Due Date updated succesfully!";
+			return UPDATE_DUEDATE;
 		} catch (Exception e) {
+			logger.debug(e.getMessage(), e);
 			throw new DatabaseException(ERROR_IN_UPDATE);
 		}
 	}

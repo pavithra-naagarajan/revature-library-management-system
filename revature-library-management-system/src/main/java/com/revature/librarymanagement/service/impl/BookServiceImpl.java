@@ -1,6 +1,7 @@
 package com.revature.librarymanagement.service.impl;
 
 import java.util.List;
+
 import static com.revature.librarymanagement.util.LibraryManagementConstants.*;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -13,6 +14,7 @@ import com.revature.librarymanagement.dao.BookDAO;
 import com.revature.librarymanagement.dto.BookDto;
 import com.revature.librarymanagement.exception.DuplicateIdException;
 import com.revature.librarymanagement.exception.IdNotFoundException;
+import com.revature.librarymanagement.exception.MethodArgumentNotValidException;
 import com.revature.librarymanagement.exception.NullValueException;
 import com.revature.librarymanagement.mapper.BookMapper;
 import com.revature.librarymanagement.model.Book;
@@ -26,20 +28,24 @@ public class BookServiceImpl implements BookService {
 	private BookDAO bookDAO;
 
 	@Override
-	public String addBook(BookDto bookDto) {
+	public String addBook(BookDto bookDto) throws MethodArgumentNotValidException {
 		logger.info("Entering add book Function");
 
 		Book book = BookMapper.dtoToEntity(bookDto);
 		Long bookId = book.getBookId();
 		Long isbn = book.getIsbn();
 		if (bookDAO.isBookExists(bookId))
-			throw new DuplicateIdException("Book with Id already exists!");
+			throw new DuplicateIdException(BOOK_EXIST_ALREADY);
 
 		if (bookDAO.getBookByISBN(isbn) != null)
 
-			throw new DuplicateIdException("Book already exists with same ISBN!");
-
-		return bookDAO.addBook(book);
+			throw new DuplicateIdException(DUPLICATE_BOOK);
+		try {
+			return bookDAO.addBook(book);
+		} catch (Exception e) {
+			logger.debug(e.getMessage(), e);
+			throw new MethodArgumentNotValidException(VALIDATION_FAIL);
+		}
 	}
 
 	@Override
@@ -50,7 +56,7 @@ public class BookServiceImpl implements BookService {
 		Long bookId = book.getBookId();
 		if (bookDAO.isBookExists(bookId))
 			return bookDAO.updateBook(book);
-		throw new IdNotFoundException("Book Id:" + bookId + " Not Found to Update!");
+		throw new IdNotFoundException(NOT_FOUND_TOUPDATE);
 
 	}
 
@@ -60,7 +66,7 @@ public class BookServiceImpl implements BookService {
 
 		if (bookDAO.isBookExists(bookId))
 			return bookDAO.deleteBook(bookId);
-		throw new IdNotFoundException("Book with Id:" + bookId + " Not Found to Delete!");
+		throw new IdNotFoundException(NOT_FOUND_TODELETE);
 
 	}
 
@@ -70,7 +76,7 @@ public class BookServiceImpl implements BookService {
 
 		if (bookDAO.isBookExists(bookId))
 			return bookDAO.getBookById(bookId);
-		throw new IdNotFoundException("Book with Id:" + bookId + " Not Found!");
+		throw new IdNotFoundException(ID_NOT_FOUND);
 
 	}
 
@@ -148,12 +154,18 @@ public class BookServiceImpl implements BookService {
 	public String updateBookStatus(Long bookId, String status) {
 		logger.info("Entering update book status Function");
 
-		return bookDAO.updateBookStatus(bookId, status);
+		if (bookDAO.isBookExists(bookId))
+			return bookDAO.updateBookStatus(bookId, status);
+		throw new IdNotFoundException(ID_NOT_FOUND);
+
 	}
 
 	@Override
 	public List<Book> searchBooks(String value) {
 		logger.info("Entering update book status Function");
-		return bookDAO.searchBooks(value);
+		List<Book> books = bookDAO.searchBooks(value);
+		if (CollectionUtils.isEmpty(books))
+			throw new NullValueException(NO_RECORDS);
+		return books;
 	}
 }

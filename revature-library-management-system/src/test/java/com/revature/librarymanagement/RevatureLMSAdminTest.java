@@ -1,6 +1,7 @@
 package com.revature.librarymanagement;
 
 import static org.junit.jupiter.api.Assertions.*;
+
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -37,7 +38,7 @@ class RevatureLMSAdminTest {
 
 	static final List<Admin> ADMIN_TEST_DATA1 = Stream
 			.of(new Admin(Long.valueOf(1), "admin1", "useradmin", "Demo@gmail.com", "admin123"))
-			.collect(Collectors.toList());;
+			.collect(Collectors.toList());
 
 	@Test
 	void getAllAdminsTest() {

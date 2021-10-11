@@ -2,6 +2,8 @@ package com.revature.librarymanagement.controller;
 
 import static com.revature.librarymanagement.util.LibraryManagementConstants.*;
 
+import javax.validation.Valid;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.revature.librarymanagement.dto.AdminDto;
-
+import com.revature.librarymanagement.exception.MethodArgumentNotValidException;
 import com.revature.librarymanagement.response.HttpResponseStatus;
 import com.revature.librarymanagement.service.AdminService;
 
@@ -54,10 +56,11 @@ public class AdminController {
 	 * it will add admin
 	 * 
 	 * @param adminDto
+	 * @throws MethodArgumentNotValidException 
 	 * @return--it will return a message added successfully
 	 */
 	@PostMapping
-	public ResponseEntity<HttpResponseStatus> addAdmin(@RequestBody AdminDto adminDto) {
+	public ResponseEntity<HttpResponseStatus> addAdmin(@Valid @RequestBody AdminDto adminDto) throws MethodArgumentNotValidException {
 		logger.info("Entering Add Admin Function");
 		return new ResponseEntity<>(new HttpResponseStatus(HttpStatus.CREATED.value(), adminService.addAdmin(adminDto)),
 				HttpStatus.CREATED);

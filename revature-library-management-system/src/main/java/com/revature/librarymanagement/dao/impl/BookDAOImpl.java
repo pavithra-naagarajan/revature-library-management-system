@@ -52,11 +52,11 @@ public class BookDAOImpl implements BookDAO {
 			book.setStatus("Available");
 			book.setCreatedOn(new Date());
 			session.save(book);
-
-			Long bookId = book.getBookId();
-			return "Book is added successfully : " + bookId + " at " + localTime;
+			logger.info("Book added");
+			return INSERT_BOOK  + " at " + localTime;
 
 		} catch (Exception e) {
+			logger.debug(e.getMessage(),e);
 			throw new DatabaseException(ERROR_IN_INSERT);
 		}
 
@@ -72,9 +72,11 @@ public class BookDAOImpl implements BookDAO {
 			book.setUpdatedOn(new Date());
 
 			session.merge(book);
-			return "Book updated successfully!";
+			logger.info("Book updated");
+			return UPDATE_BOOK;
 
 		} catch (Exception e) {
+			logger.debug(e.getMessage(),e);
 			throw new DatabaseException(ERROR_IN_UPDATE);
 		}
 
@@ -89,9 +91,11 @@ public class BookDAOImpl implements BookDAO {
 		try {
 			Session session = sessionFactory.getCurrentSession();
 			session.delete(book);
-			return "Book deleted with : " + bookId + " at " + localTime;
+			logger.info("Book deleted");
+			return DELETE_BOOK + bookId + " at " + localTime;
 
 		} catch (Exception e) {
+			logger.debug(e.getMessage(),e);
 			throw new DatabaseException(ERROR_IN_DELETE);
 		}
 
@@ -105,6 +109,7 @@ public class BookDAOImpl implements BookDAO {
 			Session session = sessionFactory.getCurrentSession();
 			return session.get(Book.class, bookId);
 		} catch (Exception e) {
+			logger.debug(e.getMessage(),e);
 			throw new DatabaseException(ERROR_IN_FETCH);
 		}
 
@@ -113,10 +118,14 @@ public class BookDAOImpl implements BookDAO {
 	@Override
 	public boolean isBookExists(Long bookId) {
 		logger.info("Entering is book exists Function");
-
+		try {
 		Session session = sessionFactory.getCurrentSession();
 		Book book = session.get(Book.class, bookId);
 		return (book != null);
+		}catch(Exception e) {
+			logger.debug(e.getMessage(),e);
+			throw new DatabaseException(ERROR_IN_FETCH);
+		}
 	}
 
 	@Override
@@ -130,6 +139,7 @@ public class BookDAOImpl implements BookDAO {
 					.setParameter(1, "%" + bookName + "%").getResultList();
 			return ((resultList).isEmpty() ? null : resultList);
 		} catch (Exception e) {
+			logger.debug(e.getMessage(),e);
 			throw new DatabaseException(ERROR_IN_FETCH);
 		}
 	}
@@ -145,6 +155,7 @@ public class BookDAOImpl implements BookDAO {
 					.setParameter(1, "%" + authorName + "%").getResultList();
 			return (resultList.isEmpty() ? null : resultList);
 		} catch (Exception e) {
+			logger.debug(e.getMessage(),e);
 			throw new DatabaseException(ERROR_IN_FETCH);
 		}
 	}
@@ -160,6 +171,7 @@ public class BookDAOImpl implements BookDAO {
 					.getResultList();
 			return (resultList.isEmpty() ? null : resultList);
 		} catch (Exception e) {
+			logger.debug(e.getMessage(),e);
 			throw new DatabaseException(ERROR_IN_FETCH);
 		}
 	}
@@ -175,6 +187,7 @@ public class BookDAOImpl implements BookDAO {
 					.setParameter(1, "%" + publisher + "%").getResultList();
 			return (resultList.isEmpty() ? null : resultList);
 		} catch (Exception e) {
+			logger.debug(e.getMessage(),e);
 			throw new DatabaseException(ERROR_IN_FETCH);
 		}
 	}
@@ -189,6 +202,7 @@ public class BookDAOImpl implements BookDAO {
 			Query<Book> query = session.createQuery(GET_ALL_BOOKS, Book.class);
 			return (query.getResultList().isEmpty() ? null : query.getResultList());
 		} catch (Exception e) {
+			logger.debug(e.getMessage(),e);
 			throw new DatabaseException(ERROR_IN_FETCH);
 		}
 	}
@@ -204,6 +218,7 @@ public class BookDAOImpl implements BookDAO {
 					.getResultList();
 			return (resultList.isEmpty() ? null : resultList.get(0));
 		} catch (Exception e) {
+			logger.debug(e.getMessage(),e);
 			throw new DatabaseException(ERROR_IN_FETCH);
 		}
 	}
@@ -218,9 +233,10 @@ public class BookDAOImpl implements BookDAO {
 			Book book = getBookById(bookId);
 			book.setStatus(status);
 			session.merge(book);
-			return "Book Status updated successfully!";
+			return UPDATE_BOOK_STATUS;
 
 		} catch (Exception e) {
+			logger.debug(e.getMessage(),e);
 			throw new DatabaseException(ERROR_IN_FETCH);
 		}
 
@@ -238,6 +254,7 @@ public class BookDAOImpl implements BookDAO {
 					.setParameter(4, "%" + value + "%").setParameter(5, "%" + value + "%").getResultList();
 			return (resultList.isEmpty() ? null : resultList);
 		} catch (Exception e) {
+			logger.debug(e.getMessage(),e);
 			throw new DatabaseException(ERROR_IN_FETCH);
 		}
 	}
